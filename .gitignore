@@ -1,0 +1,14 @@
+# python cache files created automatically when code runs
+__pycache__/
+*.pyc
+
+# autosave copies made by colab
+.ipynb_checkpoints/
+
+.env
+
+# hidden folder-settings files made by macos
+.DS_Store
+
+# dataset rebuilt by prepare.py (for raw csv of ~180 mb Arena Data)
+data/
