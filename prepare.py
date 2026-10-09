@@ -4,7 +4,7 @@ build the dataset for the project from the chatbot arena human preference data.
 source: lmarena-ai/arena-human-preference-55k (hugging face, apache-2.0)
 each arena battle gives two (llm name, prompt, response) examples, one per side.
 we keep only the first turn, map model names to families, balance the classes,
-tag each prompt with a rough task type, and split train/val/test by prompt.
+and split train/val/test by prompt.
 
 usage:
     python prepare.py                         # download from hugging face
@@ -31,11 +31,6 @@ famRules = {
     "deepseek": r"^deepseek",
 }
 
-codeRe = re.compile(r"```|\b(python|java|javascript|typescript|c\+\+|c#|sql|html|css|regex|bash|code|function|script|program|compile|bug|debug|api|class|def|import|json|react|docker)\b", re.I)
-mathRe = re.compile(r"\b(solve|equation|calculate|compute|integral|derivative|probability|algebra|math|sum of|how many|prove|theorem)\b|\d+\s*[-+*/^x]\s*\d+", re.I)
-writeRe = re.compile(r"\b(write|poem|story|essay|letter|email|haiku|song|lyrics|rewrite|paraphrase|summari[sz]e|tweet|joke|limerick|blog|caption|slogan)\b", re.I)
-
-
 # helper functions
 
 def familyOf(name):
@@ -53,14 +48,6 @@ def firstTurn(raw):
         return None
     if not turns or not isinstance(turns[0], str): return None
     return turns[0].strip() or None
-
-
-def tagTask(prompt):
-    # rough task label from the prompt text (used later for rq3)
-    if codeRe.search(prompt): return "coding"
-    if mathRe.search(prompt): return "math"
-    if writeRe.search(prompt): return "writing"
-    return "other"
 
 
 def loadArena(csvPath):
@@ -124,19 +111,16 @@ def main():
     print(f"\nbalancing to {n} examples per family (smallest class: {counts.idxmin()} with {counts.min()})")
     df = df.groupby("family", group_keys=False).sample(n=n, random_state=args.seed).reset_index(drop=True)
 
-    df["task"] = df["prompt"].map(tagTask)
     df["split"] = groupSplit(df, args.seed)
 
     os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)
-    df[["family", "model", "task", "split", "prompt", "response"]].to_csv(args.out, index=False)
+    df[["family", "model", "split", "prompt", "response"]].to_csv(args.out, index=False)
 
     print(f"\nsaved {len(df)} rows to {args.out}")
     print("\nrows per split:")
     print(df["split"].value_counts().to_string())
     print("\nfamily x split:")
     print(pd.crosstab(df["family"], df["split"]).to_string())
-    print("\ntask x family:")
-    print(pd.crosstab(df["task"], df["family"]).to_string())
     print("\nmodels included:")
     print(df.groupby("family")["model"].unique().to_string())
 
