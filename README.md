@@ -17,7 +17,8 @@ Source: [`lmarena-ai/arena-human-preference-55k`](https://huggingface.co/dataset
 2. model names are mapped to families by prefix (`gpt-3.5*/gpt-4*` → gpt, `claude*` → claude, `llama*` → llama, `mistral*/mixtral*` → mistral, `gemini*` → gemini); fine-tunes trained on other models' outputs (vicuna, koala, wizardlm, …) are dropped
 3. empty responses and exact duplicates are removed
 4. classes are **balanced** by downsampling every family to the same size (default ≤ 3000)
-5. train / val / test = 70 / 15 / 15, split **by prompt** (`GroupShuffleSplit`) so the same prompt never appears in two splits
+5. each prompt gets a rough task tag (coding / math / writing / other) by keyword rules
+6. train / val / test = 70 / 15 / 15, split **by prompt** (`GroupShuffleSplit`) so the same prompt never appears in two splits
 
 Model and company names (OpenAI, Claude, Llama, Gemini, …) are replaced with `<org>` before training so the classifier can't just read off self-identification; `--nomask` turns this off for an ablation.
 
