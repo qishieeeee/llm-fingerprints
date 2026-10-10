@@ -21,12 +21,34 @@ Source: [`lmarena-ai/arena-human-preference-55k`](https://huggingface.co/dataset
 
 Model and company names (OpenAI, Claude, Llama, Gemini, …) are replaced with `<org>` before training so the classifier can't just read off self-identification; `--nomask` turns this off for an ablation.
 
-## Setup
+## Models
+
+- **TextCNN** (Kim, 2014): embedding (200) → Conv1d with widths 3/4/5 × 128 filters → ReLU → masked max-pool → dropout 0.5 → linear
+- **BiLSTM**: embedding (200) → 2-layer bidirectional LSTM (128 per direction, packed sequences) → masked max-pool over time → dropout 0.5 → linear
+- **Baselines**: majority class; TF-IDF (1–2 grams) + logistic regression
+
+Training: Adam (lr 1e-3), cross-entropy, batch 64, up to 15 epochs, early stopping on validation macro-F1 (patience 3), gradient clipping 1.0, 3 seeds. Tokens: words + punctuation with case kept and line breaks as a `<nl>` token (formatting is part of the fingerprint); vocabulary of the 30k most frequent training tokens; sequences truncated to 256 tokens (in `both` mode: 64 prompt tokens + `<sep>` + response).
+
+## Running
 
 ```bash
 pip install -r requirements.txt
-python prepare.py      # builds data/arena.csv
-python baseline.py     # majority + tf-idf baselines
+python prepare.py                                # builds data/arena.csv
+python baseline.py                               # majority + tf-idf baselines
+python train.py --model cnn --input response     # rq1
+python train.py --model lstm --input prompt      # rq2 (also: response, both)
+python train.py --model cnn --input response --nomask   # self-identification ablation
 ```
 
-*(models and results sections coming as they're added)*
+Results land in `results/`: one folder per run with per-seed metrics (`seedN.json`), confusion matrices and training curves, plus `results/summary.csv` with mean ± std across seeds.
+
+## Repository structure
+
+```
+prepare.py        dataset construction
+baseline.py       majority + tf-idf/logistic regression baselines
+train.py          cnn / lstm training and evaluation
+src/data.py       tokenization, vocabulary, masking, dataset
+src/models.py     TextCNN and BiLSTM
+report/           project report (pdf)
+```
