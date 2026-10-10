@@ -32,6 +32,10 @@ Training: Adam (lr 1e-3), cross-entropy, batch 64, up to 15 epochs, early stoppi
 
 ## Running
 
+Easiest: open `run.ipynb` in Google Colab with a GPU runtime and run all cells.
+
+Locally:
+
 ```bash
 pip install -r requirements.txt
 python prepare.py                                # builds data/arena.csv
@@ -51,5 +55,6 @@ baseline.py       majority + tf-idf/logistic regression baselines
 train.py          cnn / lstm training and evaluation
 src/data.py       tokenization, vocabulary, masking, dataset
 src/models.py     TextCNN and BiLSTM
+run.ipynb         colab runner
 report/           project report (pdf)
 ```
