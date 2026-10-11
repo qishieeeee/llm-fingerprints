@@ -1,0 +1,4 @@
+task,nTest,seenF1,seenStd,unseenF1,unseenStd,dropF1
+coding,249,0.653,0.03,0.588,0.028,0.064
+math,169,0.597,0.014,0.542,0.026,0.055
+writing,265,0.578,0.029,0.577,0.017,0.0
