@@ -4,7 +4,7 @@ Identifying which LLM (GPT, Claude, Llama, etc.) wrote a response using CNN and 
 
 **Name:** Qistina Zamzuri
 
-**Report:** [`report/MidtermProjectReport_qjm5062`](report/MidtermProjectReport_qjm5062)
+**Report:** [`report/MidtermProjectReport_qjm5062.pdf`](report/MidtermProjectReport_qjm5062.pdf)
 
 ## Summary
 
