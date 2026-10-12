@@ -4,15 +4,15 @@ Identifying which LLM (GPT, Claude, Llama, etc.) wrote a response using CNN and 
 
 **Name:** Qistina Zamzuri
 
-**Report:** [`report/report.pdf`](report/report.pdf)
+**Report:** [`report/MidtermProjectReport_qjm5062`](report/MidtermProjectReport_qjm5062)
 
 ## Summary
 
 I trained a TextCNN and a BiLSTM to tell which of five LLM families (Claude, Gemini, GPT, Llama, Mistral) wrote a response from Chatbot Arena.
 
-- **RQ1:** from the response alone, both models reach about **0.61 macro-F1**, three times chance (0.20). A TF-IDF + logistic regression baseline does as well, so the signal is mostly word choice and formatting.
-- **RQ2:** the prompt alone scores at **chance**, and adding it to the response does not help. Arena assigns models to prompts at random, so the prompt carries no information about who answered.
-- **RQ3 (extra):** a model that never saw a task in training still recognizes the families on it, losing about **0.06 F1 on coding and math** and nothing on writing.
+- **RQ1:** from the response alone, both models reach about 0.61 macro-F1, three times chance (0.20). A TF-IDF + logistic regression baseline does as well, so the signal is mostly word choice and formatting.
+- **RQ2:** the prompt alone scores at chance, and adding it to the response does not help. Arena assigns models to prompts at random, so the prompt carries no information about who answered.
+- **RQ3 (extra):** a model that never saw a task in training still recognizes the families on it, losing about 0.06 F1 on coding and math and nothing on writing.
 - Claude is the easiest family to recognize (F1 ≈ 0.86); Mistral the hardest (F1 ≈ 0.42), often confused with Llama and GPT.
 - Masking self-identifying names ("OpenAI", "Claude", …) changes F1 by less than one standard deviation: the models learn style, not name tags.
 
@@ -23,9 +23,9 @@ Test set: 2,159 examples, 5 balanced classes. Self-identification masked. Mean �
 | Model | Prompt only | Response only | Prompt + response |
 |---|---|---|---|
 | Majority class | – | 0.065 | – |
-| TF-IDF + LR | 0.207 | **0.617** | 0.602 |
+| TF-IDF + LR | 0.207 | 0.617 | 0.602 |
 | TextCNN | 0.189 ± 0.013 | 0.610 ± 0.003 | 0.603 ± 0.001 |
-| BiLSTM | 0.185 ± 0.002 | **0.615 ± 0.007** | 0.595 ± 0.014 |
+| BiLSTM | 0.185 ± 0.002 | 0.615 ± 0.007 | 0.595 ± 0.014 |
 
 *Macro-F1. Accuracy and per-seed numbers are in `results/summary.csv` and `results/<model>-<input>/seedN.json`.*
 
@@ -37,7 +37,7 @@ Test set: 2,159 examples, 5 balanced classes. Self-identification masked. Mean �
 | Math | 169 | 0.597 ± 0.014 | 0.542 ± 0.026 | 0.055 |
 | Writing | 265 | 0.578 ± 0.029 | 0.577 ± 0.017 | 0.000 |
 
-**Self-identification ablation** (TextCNN, response input): masked 0.610 ± 0.003 vs. unmasked 0.615 ± 0.009.
+Self-identification ablation (TextCNN, response input): masked 0.610 ± 0.003 vs. unmasked 0.615 ± 0.009.
 
 ## Data
 
